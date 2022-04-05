@@ -32,7 +32,7 @@ interface StreamInfo {
 
 export class M3uParser {
     private streamsInfo: StreamInfo[] = [];
-    // private streamsInfoBackup: StreamInfo[] = [];
+    private streamsInfoBackup: StreamInfo[] = [];
     private lines: string[] = [];
     private checkLive = true;
     private content = '';
@@ -109,6 +109,7 @@ export class M3uParser {
             }
         }
         await Promise.all(promises);
+        this.streamsInfoBackup = Object.assign({}, this.streamsInfo);
     }
 
     private async parseLine(lineNumber: number) {
@@ -126,7 +127,6 @@ export class M3uParser {
                     this.lines[lineNumber + i] &&
                     !isURL(this.lines[lineNumber + i])
                 ) {
-                    console.log(this.lines[lineNumber + i]);
                     live = true;
                     streamsLink.push(this.lines[lineNumber + i]);
                     break;
@@ -138,15 +138,6 @@ export class M3uParser {
         }
 
         if (lineInfo && streamLink) {
-            const title = this.regexes.title.exec(lineInfo);
-            const logo = this.regexes.tvgLogo.exec(lineInfo);
-            const category = this.regexes.groupTitle.exec(lineInfo);
-            const tvgID = this.regexes.tvgID.exec(lineInfo);
-            const tvgName = this.regexes.tvgName.exec(lineInfo);
-            const tvgURL = this.regexes.tvgURL.exec(lineInfo);
-            const country = this.regexes.tvgCountry.exec(lineInfo);
-            const language = this.regexes.tvgLanguage.exec(lineInfo);
-
             if (this.checkLive && !live) {
                 try {
                     const response = await this.axiosGet(streamLink);
@@ -157,6 +148,15 @@ export class M3uParser {
                     //
                 }
             }
+
+            const title = this.regexes.title.exec(lineInfo);
+            const logo = this.regexes.tvgLogo.exec(lineInfo);
+            const category = this.regexes.groupTitle.exec(lineInfo);
+            const tvgID = this.regexes.tvgID.exec(lineInfo);
+            const tvgName = this.regexes.tvgName.exec(lineInfo);
+            const tvgURL = this.regexes.tvgURL.exec(lineInfo);
+            const country = this.regexes.tvgCountry.exec(lineInfo);
+            const language = this.regexes.tvgLanguage.exec(lineInfo);
 
             const info: StreamInfo = {
                 name: title ? title[1] : null,
@@ -186,7 +186,137 @@ export class M3uParser {
         }
     }
 
-    public get() {
-        return JSON.stringify(this.streamsInfo);
+    private getM3U() {
+        if (this.streamsInfo.length === 0) return "";
+        const content = ["#EXTM3U"];
+        for (const stream of this.streamsInfo) {
+            let line = "#EXTINF:-1";
+            if (stream.tvg) {
+                if (stream.tvg.id) line += ` tvg-id="${stream.tvg.id}"`;
+                if (stream.tvg.name) line += ` tvg-name="${stream.tvg.name}"`;
+                if (stream.tvg.url) line += ` tvg-url="${stream.tvg.url}"`;
+            }
+            if (stream.logo) {
+                line += ` tvg-logo="${stream.logo}"`;
+            }
+            if (stream.country && stream.country.code) {
+                if (stream.country.code) line += ` tvg-country="${stream.country.code}"`;
+                if (stream.country.name) line += ` tvg-country="${stream.country.name}"`;
+            }
+            if (stream.language && stream.language.name) {
+                if (stream.language.code) line += ` tvg-language="${stream.language.code}"`;
+                if (stream.language.name) line += ` tvg-language="${stream.language.name}"`;
+            }
+            if (stream.category) {
+                line += ` group-title="${stream.category}"`;
+            }
+            if (stream.name) {
+                line += `,${stream.name}`;
+            }
+            content.push(line);
+            content.push(stream.url);
+        }
+        return content.join('\n');
+    }
+
+    public getJSON(indent = 4) {
+        return JSON.stringify(this.streamsInfo, null, indent);
+    }
+
+    public getStreamsInfo() {
+        return this.streamsInfo;
+    }
+
+    public resetOperations() {
+        this.streamsInfo = Object.assign({}, this.streamsInfoBackup);
+    }
+
+    public filterBy(
+        key: string,
+        filters: string[],
+        keySplitter = '-',
+        retrieve = true,
+        nestedKey = false
+    ) {
+        let [key0, key1] = ["", ""]
+        if (nestedKey) {
+            try {
+                [key0, key1] = key.split(keySplitter);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        if (filters.length === 0) return;
+        this.streamsInfo = this.streamsInfo.filter((stream) => {
+            let check;
+            if (nestedKey) {
+                check = new RegExp(filters.join('|'), 'gm').test(stream[key0][key1]);
+            } else {
+                check = new RegExp(filters.join('|'), 'gm').test(stream[key]);
+            }
+            if (retrieve) return check;
+            return !check;
+        })
+    }
+
+    public removeByExtension(extensions: string[]) {
+        this.filterBy('url', extensions, '-', false, false);
+    }
+
+    public retrieveByCategory(filters: string[]) {
+        this.filterBy('category', filters, '-', true, false);
+    }
+
+    public sortBy(key: string, keySplitter = "-", asc = true, nestedKey = false) {
+        let [key0, key1] = ["", ""]
+        if (nestedKey) {
+            try {
+                [key0, key1] = key.split(keySplitter);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        this.streamsInfo.sort((a, b) => {
+            if (nestedKey) {
+                if (asc) {
+                    return a[key0][key1] > b[key0][key1] ? 1 : -1;
+                } else {
+                    return a[key0][key1] < b[key0][key1] ? 1 : -1;
+                }
+            } else {
+                if (asc) {
+                    return a[key] > b[key] ? 1 : -1;
+                } else {
+                    return a[key] < b[key] ? 1 : -1;
+                }
+            }
+        })
+    }
+
+    private getShuffledArr = arr => {
+        const newArr = arr.slice()
+        for (let i = newArr.length - 1; i > 0; i--) {
+            const rand = Math.floor(Math.random() * (i + 1));
+            [newArr[i], newArr[rand]] = [newArr[rand], newArr[i]];
+        }
+        return newArr
+    };
+
+    public getRandomStream(shuffle = true) {
+        if (shuffle) {
+            this.streamsInfo = this.getShuffledArr(this.streamsInfo);
+        }
+        return this.streamsInfo[Math.floor(Math.random() * this.streamsInfo.length)];
+    }
+
+    public saveToFile(filePath: string, format = 'json') {
+        format = filePath.split('.').length > 1 ? filePath.split('.').pop() : format;
+        const file = fs.createWriteStream(filePath);
+        if (format === 'json') {
+            file.write(this.getJSON());
+        } else if (format === 'm3u') {
+            file.write(this.getM3U());
+        }
+        file.end();
     }
 }
