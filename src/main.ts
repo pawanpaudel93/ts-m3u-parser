@@ -5,7 +5,7 @@ import { M3uParser } from "./index";
     const timeout = 5
     const m3uParser = new M3uParser(userAgent, timeout)
     await m3uParser.parseM3u("/home/pawan/Desktop/np.m3u")
-    // m3uParser.filterBy("live", [true]);
-    console.log(m3uParser.getJSON())
-    m3uParser.saveToFile("output.json")
+    m3uParser.filterBy("live", [true]);
+    // console.log(m3uParser.getJSON())
+    await m3uParser.saveToFile("output.json")
 })();

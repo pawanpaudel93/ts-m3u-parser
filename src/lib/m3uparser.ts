@@ -39,17 +39,17 @@ export class M3uParser {
     private timeout: number;
     private userAgent: string;
     private regexes = {
-        tvgName: new RegExp('tvg-name="(.*?)"', 'gm'),
-        tvgID: new RegExp('tvg-id="(.*?)"', 'gm'),
-        tvgLogo: new RegExp('tvg-logo="(.*?)"', 'gm'),
-        tvgURL: new RegExp('tvg-url="(.*?)"', 'gm'),
-        tvgCountry: new RegExp('tvg-country="(.*?)"', 'gm'),
-        tvgLanguage: new RegExp('tvg-language="(.*?)"', 'gm'),
-        groupTitle: new RegExp('group-title="(.*?)"', 'gm'),
-        title: new RegExp('(?!.*=",?.*")[,](.*?)$', 'gm'),
+        tvgName: new RegExp('tvg-name="(.*?)"', 'i'),
+        tvgID: new RegExp('tvg-id="(.*?)"', 'i'),
+        tvgLogo: new RegExp('tvg-logo="(.*?)"', 'i'),
+        tvgURL: new RegExp('tvg-url="(.*?)"', 'i'),
+        tvgCountry: new RegExp('tvg-country="(.*?)"', 'i'),
+        tvgLanguage: new RegExp('tvg-language="(.*?)"', 'i'),
+        groupTitle: new RegExp('group-title="(.*?)"', 'i'),
+        title: new RegExp('(?!.*=",?.*")[,](.*?)$', 'i'),
     };
 
-    constructor(userAgent: string, timeout: number) {
+    constructor(userAgent: string, timeout = 5) {
         this.userAgent = userAgent;
         this.timeout = timeout * 1000;
     }
@@ -95,15 +95,12 @@ export class M3uParser {
 
     private async parseLines() {
         const numberOfLines = this.lines.length;
-        const promises = [];
+        const promises: Promise<void>[] = [];
         for (let i = 0; i < numberOfLines; i++) {
             if (this.lines[i].includes('#EXTINF')) {
                 promises.push(
                     new Promise((resolve) => {
-                        (async () => {
-                            await this.parseLine(i);
-                            resolve('done');
-                        })();
+                        this.parseLine(i, resolve);
                     })
                 );
             }
@@ -112,27 +109,30 @@ export class M3uParser {
         this.streamsInfoBackup = Object.assign({}, this.streamsInfo);
     }
 
-    private async parseLine(lineNumber: number) {
+    private getValue(line: string, type: string) {
+        const match = this.regexes[type].exec(line);
+        return match ? match[1] : null;
+    }
+
+    private async parseLine(lineNumber: number, resolve: () => void) {
         const lineInfo = this.lines[lineNumber];
         let streamLink = '';
-        const streamsLink = [];
         let live = false;
 
         try {
             for (const i of [1, 2]) {
                 if (this.lines[lineNumber + i] && isURL(this.lines[lineNumber + i])) {
-                    streamsLink.push(this.lines[lineNumber + i]);
+                    streamLink = this.lines[lineNumber + i];
                     break;
                 } else if (
                     this.lines[lineNumber + i] &&
                     !isURL(this.lines[lineNumber + i])
                 ) {
                     live = true;
-                    streamsLink.push(this.lines[lineNumber + i]);
+                    streamLink = this.lines[lineNumber + i];
                     break;
                 }
             }
-            streamLink = streamsLink[0];
         } catch (error) {
             //
         }
@@ -149,34 +149,32 @@ export class M3uParser {
                 }
             }
 
-            const title = this.regexes.title.exec(lineInfo);
-            const logo = this.regexes.tvgLogo.exec(lineInfo);
-            const category = this.regexes.groupTitle.exec(lineInfo);
-            const tvgID = this.regexes.tvgID.exec(lineInfo);
-            const tvgName = this.regexes.tvgName.exec(lineInfo);
-            const tvgURL = this.regexes.tvgURL.exec(lineInfo);
-            const country = this.regexes.tvgCountry.exec(lineInfo);
-            const language = this.regexes.tvgLanguage.exec(lineInfo);
+            const title = this.getValue(lineInfo, 'title');
+            const logo = this.getValue(lineInfo, 'tvgLogo');
+            const category = this.getValue(lineInfo, 'groupTitle');
+            const tvgID = this.getValue(lineInfo, 'tvgID');
+            const tvgName = this.getValue(lineInfo, 'tvgName');
+            const tvgURL = this.getValue(lineInfo, 'tvgURL');
+            const country = this.getValue(lineInfo, 'tvgCountry')
+            const language = this.getValue(lineInfo, 'tvgLanguage')
 
             const info: StreamInfo = {
-                name: title ? title[1] : null,
-                logo: logo ? logo[1] : null,
+                name: title,
+                logo,
                 url: streamLink,
-                category: category ? category[1] : null,
+                category,
                 tvg: {
-                    id: tvgID ? tvgID[1] : null,
-                    name: tvgName ? tvgName[1] : null,
-                    url: tvgURL ? tvgURL[1] : null,
+                    id: tvgID,
+                    name: tvgName,
+                    url: tvgURL,
                 },
                 country: {
-                    code: country ? country[1] : null,
-                    name: country
-                        ? countries.getName(country[1], 'en', { select: 'official' })
-                        : null,
+                    code: country,
+                    name: countries.getName(country, 'en', { select: 'official' }) ?? null,
                 },
                 language: {
-                    code: language ? ISO6391.getCode(language[1]) : null,
-                    name: language ? language[1] : null,
+                    code: language ? ISO6391.getCode(language) ?? null : null,
+                    name: language,
                 },
             };
             if (this.checkLive) {
@@ -184,6 +182,7 @@ export class M3uParser {
             }
             this.streamsInfo.push(info);
         }
+        resolve();
     }
 
     private getM3U() {
@@ -233,7 +232,7 @@ export class M3uParser {
 
     public filterBy(
         key: string,
-        filters: string[],
+        filters: string[] | boolean[],
         keySplitter = '-',
         retrieve = true,
         nestedKey = false
@@ -250,9 +249,9 @@ export class M3uParser {
         this.streamsInfo = this.streamsInfo.filter((stream) => {
             let check;
             if (nestedKey) {
-                check = new RegExp(filters.join('|'), 'gm').test(stream[key0][key1]);
+                check = new RegExp(filters.join('|'), 'i').test(stream[key0][key1]);
             } else {
-                check = new RegExp(filters.join('|'), 'gm').test(stream[key]);
+                check = new RegExp(filters.join('|'), 'i').test(stream[key]);
             }
             if (retrieve) return check;
             return !check;
@@ -263,7 +262,7 @@ export class M3uParser {
         this.filterBy('url', extensions, '-', false, false);
     }
 
-    public retrieveByCategory(filters: string[]) {
+    public retrieveByCategory(filters: string[] | boolean[]) {
         this.filterBy('category', filters, '-', true, false);
     }
 
