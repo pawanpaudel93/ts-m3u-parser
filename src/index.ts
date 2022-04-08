@@ -1,1 +1,1 @@
-export * from './lib/m3uparser';
+export * from './lib/parser';
