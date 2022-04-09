@@ -35,21 +35,21 @@ export interface Parser {
     filterBy: (
         key: string,
         filters: string[] | boolean[],
-        keySplitter: string,
-        retrieve: boolean,
-        nestedKey: boolean
+        retrieve?: boolean,
+        nestedKey?: boolean,
+        keySplitter?: string
     ) => void;
     sortBy: (
         key: string,
-        keySplitter: string,
-        asc: boolean,
-        nestedKey: boolean
+        asc?: boolean,
+        nestedKey?: boolean,
+        keySplitter?: string
     ) => void;
-    parseM3u: (string, boolean) => Promise<void>;
+    parseM3u: (path: string, checkLive?: boolean) => Promise<void>;
     removeByExtension: (extensions: string[]) => void;
     resetOperations: () => void;
     retrieveByCategory: (category: string[] | boolean[]) => void;
-    getRandomStream: (shuffle: boolean) => StreamInfo;
+    getRandomStream: (shuffle?: boolean) => StreamInfo;
     saveToFile: (file: string, format?: string) => void;
     getStreamsInfo: () => StreamInfo[];
     getJSON: () => string;
@@ -128,10 +128,7 @@ export class M3uParser implements Parser {
                 ) {
                     streamLink = this.lines[lineNumber + i];
                     break;
-                } else if (
-                    this.lines[lineNumber + i] &&
-                    !isURL(this.lines[lineNumber + i])
-                ) {
+                } else {
                     live = true;
                     streamLink = this.lines[lineNumber + i];
                     break;
@@ -145,9 +142,7 @@ export class M3uParser implements Parser {
             if (this.checkLive && !live) {
                 try {
                     const response = await this.axiosGet(streamLink);
-                    if (response.status === 200) {
-                        live = true;
-                    }
+                    live = response.status === 200;
                 } catch (err) {
                     //
                 }
@@ -180,7 +175,7 @@ export class M3uParser implements Parser {
                         }) ?? null,
                 },
                 language: {
-                    code: language ? ISO6391.getCode(language) ?? null : null,
+                    code: language ? ISO6391.getCode(language) || null : null,
                     name: language,
                 },
             };
@@ -193,7 +188,6 @@ export class M3uParser implements Parser {
     }
 
     protected getM3U() {
-        if (this.streamsInfo.length === 0) return '';
         const content = ['#EXTM3U'];
         for (const stream of this.streamsInfo) {
             let line = '#EXTINF:-1';
@@ -240,6 +234,7 @@ export class M3uParser implements Parser {
 
     public async parseM3u(path: string, checkLive = true) {
         this.checkLive = checkLive;
+        this.lines.length = 0;
         if (isURL(path)) {
             try {
                 const response = await this.axiosGet(path);
@@ -282,19 +277,20 @@ export class M3uParser implements Parser {
     public filterBy(
         key: string,
         filters: string[] | boolean[],
-        keySplitter = '-',
         retrieve = true,
-        nestedKey = false
+        nestedKey = false,
+        keySplitter = '-'
     ) {
+        if (filters.length === 0) return;
         let [key0, key1] = ['', ''];
         if (nestedKey) {
-            try {
-                [key0, key1] = key.split(keySplitter);
-            } catch (error) {
-                console.log(error);
+            [key0, key1] = key.split(keySplitter);
+            if (key0 === undefined || key1 === undefined) {
+                throw new Error(
+                    `Invalid nested key: ${key} with keySplitter: ${keySplitter}`
+                );
             }
         }
-        if (filters.length === 0) return;
         this.streamsInfo = this.streamsInfo.filter((stream) => {
             let check;
             if (nestedKey) {
@@ -310,25 +306,26 @@ export class M3uParser implements Parser {
     }
 
     public removeByExtension(extensions: string[]) {
-        this.filterBy('url', extensions, '-', false, false);
+        this.filterBy('url', extensions, false);
     }
 
     public retrieveByCategory(filters: string[] | boolean[]) {
-        this.filterBy('category', filters, '-', true, false);
+        this.filterBy('category', filters, true);
     }
 
     public sortBy(
         key: string,
-        keySplitter = '-',
         asc = true,
-        nestedKey = false
+        nestedKey = false,
+        keySplitter = '-'
     ) {
         let [key0, key1] = ['', ''];
         if (nestedKey) {
-            try {
-                [key0, key1] = key.split(keySplitter);
-            } catch (error) {
-                console.log(error);
+            [key0, key1] = key.split(keySplitter);
+            if (key0 === undefined || key1 === undefined) {
+                throw new Error(
+                    `Invalid nested key: ${key} with keySplitter: ${keySplitter}`
+                );
             }
         }
         this.streamsInfo.sort((a, b) => {
@@ -360,6 +357,9 @@ export class M3uParser implements Parser {
     public saveToFile(filePath: string, format = 'json') {
         format =
             filePath.split('.').length > 1 ? filePath.split('.').pop() : format;
+        if (!filePath.includes(`.${format}`)) {
+            filePath = `${filePath}.${format}`;
+        }
         if (format === 'json') {
             fs.writeFileSync(filePath, this.getJSON());
         } else if (format === 'm3u') {
