@@ -17,7 +17,3 @@
  * something();
  * ```
  */
-import { M3uParser } from '../index';
-declare module 'm3u-parser' {
-    export = M3uParser;
-}
