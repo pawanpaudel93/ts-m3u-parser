@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>M3uParser | m3u-parser</title>
-	<meta name="description" content="Documentation for m3u-parser">
+	<title>M3uParser | @pawanpaudel93/m3u-parser</title>
+	<meta name="description" content="Documentation for @pawanpaudel93/m3u-parser">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 </head>
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">m3u-parser</a>
+					<a href="../index.html" class="title">@pawanpaudel93/m3u-parser</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -66,6 +66,23 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>A parser for m3u files.</p>
+					</div>
+					<p>It parses the contents of m3u file to a list of streams information which can be saved as a JSON/M3U file.</p>
+					<pre><code> <span class="hljs-keyword">import</span> { M3uParser } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;@pawanpaudel93/m3u-parser&quot;</span>
+
+<span class="hljs-keyword">const</span> userAgent = <span class="hljs-string">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36&quot;</span>
+<span class="hljs-keyword">const</span> parser = <span class="hljs-keyword">new</span> M3uParser(userAgent);
+(<span class="hljs-keyword">async</span> () =&gt; {
+<span class="hljs-keyword">await</span> parser.parseM3u(<span class="hljs-string">&quot;https://iptv-org.github.io/iptv/countries/np.m3u&quot;</span>)
+<span class="hljs-built_in">console</span>.log(parser.getStreamsInfo())
+})();
+</code></pre>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -116,9 +133,11 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="m3uparser.html#parseline" class="tsd-kind-icon">parse<wbr>Line</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="m3uparser.html#parselines" class="tsd-kind-icon">parse<wbr>Lines</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="m3uparser.html#parsem3u" class="tsd-kind-icon">parse<wbr>M3u</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="m3uparser.html#removebycategory" class="tsd-kind-icon">remove<wbr>ByCategory</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="m3uparser.html#removebyextension" class="tsd-kind-icon">remove<wbr>ByExtension</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="m3uparser.html#resetoperations" class="tsd-kind-icon">reset<wbr>Operations</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="m3uparser.html#retrievebycategory" class="tsd-kind-icon">retrieve<wbr>ByCategory</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="m3uparser.html#retrievebyextension" class="tsd-kind-icon">retrieve<wbr>ByExtension</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="m3uparser.html#savetofile" class="tsd-kind-icon">save<wbr>ToFile</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="m3uparser.html#sortby" class="tsd-kind-icon">sort<wbr>By</a></li>
 							</ul>
@@ -144,7 +163,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L77">lib/parser.ts:77</a></li>
+									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L91">lib/parser.ts:91</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -169,7 +188,7 @@
 					<div class="tsd-signature tsd-kind-icon">check<wbr>Live<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L64">lib/parser.ts:64</a></li>
+							<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L78">lib/parser.ts:78</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -179,7 +198,7 @@
 					<div class="tsd-signature tsd-kind-icon">content<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L65">lib/parser.ts:65</a></li>
+							<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L79">lib/parser.ts:79</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -189,7 +208,7 @@
 					<div class="tsd-signature tsd-kind-icon">lines<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = []</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L63">lib/parser.ts:63</a></li>
+							<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L77">lib/parser.ts:77</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -199,7 +218,7 @@
 					<div class="tsd-signature tsd-kind-icon">streams<wbr>Info<span class="tsd-signature-symbol">:</span> <a href="../interfaces/streaminfo.html" class="tsd-signature-type">StreamInfo</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = []</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L61">lib/parser.ts:61</a></li>
+							<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L75">lib/parser.ts:75</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -209,7 +228,7 @@
 					<div class="tsd-signature tsd-kind-icon">streams<wbr>Info<wbr>Backup<span class="tsd-signature-symbol">:</span> <a href="../interfaces/streaminfo.html" class="tsd-signature-type">StreamInfo</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = []</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L62">lib/parser.ts:62</a></li>
+							<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L76">lib/parser.ts:76</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -219,7 +238,7 @@
 					<div class="tsd-signature tsd-kind-icon">timeout<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L66">lib/parser.ts:66</a></li>
+							<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L80">lib/parser.ts:80</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -229,7 +248,7 @@
 					<div class="tsd-signature tsd-kind-icon">user<wbr>Agent<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L67">lib/parser.ts:67</a></li>
+							<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L81">lib/parser.ts:81</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -246,7 +265,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L84">lib/parser.ts:84</a></li>
+									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L98">lib/parser.ts:98</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -269,16 +288,29 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L277">lib/parser.ts:277</a></li>
+									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L318">lib/parser.ts:318</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Filter streams information.</p>
+								</div>
+								<p>It retrieves/removes stream information from streams information list using filters on key.
+								If key is not found, it will not raise error and filtering is done silently.</p>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>key: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Key can be single or nested. eg. key=&#39;name&#39;, key=&#39;language-name&#39;</p>
+									</div>
 								</li>
 								<li>
 									<h5>filters: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>List of filters to perform the retrieve or remove operation.</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> retrieve: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = true</span></h5>
@@ -304,9 +336,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L265">lib/parser.ts:265</a></li>
+									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L289">lib/parser.ts:289</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the streams information as json</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -314,6 +351,9 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<ul>
+								<li>JSON string of the parsed M3U file</li>
+							</ul>
 						</li>
 					</ul>
 				</section>
@@ -327,7 +367,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L190">lib/parser.ts:190</a></li>
+									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L204">lib/parser.ts:204</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -344,9 +384,15 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L348">lib/parser.ts:348</a></li>
+									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L434">lib/parser.ts:434</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Return a random stream information</p>
+								</div>
+								<p>It returns a random stream information with shuffle if required.</p>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -354,6 +400,9 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/streaminfo.html" class="tsd-signature-type">StreamInfo</a></h4>
+							<ul>
+								<li>Stream information object.</li>
+							</ul>
 						</li>
 					</ul>
 				</section>
@@ -361,22 +410,22 @@
 					<a name="getshuffledarr" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> get<wbr>Shuffled<wbr>Arr</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Shuffled<wbr>Arr<span class="tsd-signature-symbol">(</span>arr<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Shuffled<wbr>Arr<span class="tsd-signature-symbol">(</span>arr<span class="tsd-signature-symbol">: </span><a href="../interfaces/streaminfo.html" class="tsd-signature-type">StreamInfo</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/streaminfo.html" class="tsd-signature-type">StreamInfo</a><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L226">lib/parser.ts:226</a></li>
+									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L240">lib/parser.ts:240</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>arr: <span class="tsd-signature-type">any</span></h5>
+									<h5>arr: <a href="../interfaces/streaminfo.html" class="tsd-signature-type">StreamInfo</a><span class="tsd-signature-symbol">[]</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/streaminfo.html" class="tsd-signature-type">StreamInfo</a><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -390,10 +439,18 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L269">lib/parser.ts:269</a></li>
+									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L296">lib/parser.ts:296</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the parsed streams information list.</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/streaminfo.html" class="tsd-signature-type">StreamInfo</a><span class="tsd-signature-symbol">[]</span></h4>
+							<ul>
+								<li>Array of StreamInfo objects</li>
+							</ul>
 						</li>
 					</ul>
 				</section>
@@ -401,13 +458,13 @@
 					<a name="getvalue" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> get<wbr>Value</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Value<span class="tsd-signature-symbol">(</span>line<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Value<span class="tsd-signature-symbol">(</span>line<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L110">lib/parser.ts:110</a></li>
+									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L124">lib/parser.ts:124</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -419,7 +476,7 @@
 									<h5>type: <span class="tsd-signature-type">string</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -433,7 +490,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L115">lib/parser.ts:115</a></li>
+									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L129">lib/parser.ts:129</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -471,7 +528,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L94">lib/parser.ts:94</a></li>
+									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L108">lib/parser.ts:108</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -488,19 +545,63 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L235">lib/parser.ts:235</a></li>
+									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L256">lib/parser.ts:256</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Parses the content of local file/URL.</p>
+								</div>
+								<p>It downloads the file from the given url or use the local file path to get the content and parses line by line to a structured format of streams information.</p>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>path: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Path/URL to the M3U file</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> checkLive: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = true</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<ul>
+								<li>Promise that resolves when the file is parsed</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="removebycategory" class="tsd-anchor"></a>
+					<h3>remove<wbr>ByCategory</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">remove<wbr>ByCategory<span class="tsd-signature-symbol">(</span>categories<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L383">lib/parser.ts:383</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Removes streams information with certain categories.</p>
+								</div>
+								<p>It removes stream information based on categories provided..</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>categories: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>List of categories to perform the retrieve or remove operation.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -514,13 +615,22 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L308">lib/parser.ts:308</a></li>
+									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L365">lib/parser.ts:365</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Removes streams information with certain extensions.</p>
+								</div>
+								<p>It removes stream information based on extensions provided.</p>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>extensions: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>List of extensions like mp4, m3u8 etc.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -537,9 +647,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L273">lib/parser.ts:273</a></li>
+									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L303">lib/parser.ts:303</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Reset the stream information list to initial state before various operations.</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -548,19 +663,60 @@
 					<a name="retrievebycategory" class="tsd-anchor"></a>
 					<h3>retrieve<wbr>ByCategory</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">retrieve<wbr>ByCategory<span class="tsd-signature-symbol">(</span>filters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">retrieve<wbr>ByCategory<span class="tsd-signature-symbol">(</span>categories<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L312">lib/parser.ts:312</a></li>
+									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L374">lib/parser.ts:374</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Retrieve only streams information with certain categories.</p>
+								</div>
+								<p>It retrieves stream information based on categories provided.</p>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>filters: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">[]</span></h5>
+									<h5>categories: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>List of categories to perform the retrieve or remove operation.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="retrievebyextension" class="tsd-anchor"></a>
+					<h3>retrieve<wbr>ByExtension</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">retrieve<wbr>ByExtension<span class="tsd-signature-symbol">(</span>extensions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L355">lib/parser.ts:355</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Retrieve only streams information with certain extensions.</p>
+								</div>
+								<p>It retrieves the stream information based on extensions provided.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>extensions: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>List of extensions like mp4, m3u8 etc.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -577,13 +733,22 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L357">lib/parser.ts:357</a></li>
+									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L450">lib/parser.ts:450</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Save to file (JSON or M3U)</p>
+								</div>
+								<p>It saves streams information as a JSON, or M3U file with a given filename and format parameters.</p>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>filePath: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Path to save the file.</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> format: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;json&quot;</span></h5>
@@ -603,13 +768,22 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L316">lib/parser.ts:316</a></li>
+									<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L396">lib/parser.ts:396</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Sort streams information.</p>
+								</div>
+								<p>It sorts streams information list sorting by key in asc/desc order.</p>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>key: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Key to sort by. It can be single or nested key.</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> asc: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = true</span></h5>
@@ -634,7 +808,7 @@
 					<div class="tsd-signature tsd-kind-icon">regexes<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L68">lib/parser.ts:68</a></li>
+							<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L82">lib/parser.ts:82</a></li>
 						</ul>
 					</aside>
 					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
@@ -643,7 +817,7 @@
 						<div class="tsd-signature tsd-kind-icon">group<wbr>Title<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol"> = new RegExp(&#x27;group-title&#x3D;&quot;(.*?)&quot;&#x27;, &#x27;i&#x27;)</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L75">lib/parser.ts:75</a></li>
+								<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L89">lib/parser.ts:89</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -653,7 +827,7 @@
 						<div class="tsd-signature tsd-kind-icon">title<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol"> = new RegExp(&#x27;(?!.*&#x3D;&quot;,?.*&quot;)[,](.*?)$&#x27;, &#x27;i&#x27;)</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L76">lib/parser.ts:76</a></li>
+								<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L90">lib/parser.ts:90</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -663,7 +837,7 @@
 						<div class="tsd-signature tsd-kind-icon">tvg<wbr>Country<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol"> = new RegExp(&#x27;tvg-country&#x3D;&quot;(.*?)&quot;&#x27;, &#x27;i&#x27;)</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L73">lib/parser.ts:73</a></li>
+								<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L87">lib/parser.ts:87</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -673,7 +847,7 @@
 						<div class="tsd-signature tsd-kind-icon">tvgID<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol"> = new RegExp(&#x27;tvg-id&#x3D;&quot;(.*?)&quot;&#x27;, &#x27;i&#x27;)</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L70">lib/parser.ts:70</a></li>
+								<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L84">lib/parser.ts:84</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -683,7 +857,7 @@
 						<div class="tsd-signature tsd-kind-icon">tvg<wbr>Language<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol"> = new RegExp(&#x27;tvg-language&#x3D;&quot;(.*?)&quot;&#x27;, &#x27;i&#x27;)</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L74">lib/parser.ts:74</a></li>
+								<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L88">lib/parser.ts:88</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -693,7 +867,7 @@
 						<div class="tsd-signature tsd-kind-icon">tvg<wbr>Logo<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol"> = new RegExp(&#x27;tvg-logo&#x3D;&quot;(.*?)&quot;&#x27;, &#x27;i&#x27;)</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L71">lib/parser.ts:71</a></li>
+								<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L85">lib/parser.ts:85</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -703,7 +877,7 @@
 						<div class="tsd-signature tsd-kind-icon">tvg<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol"> = new RegExp(&#x27;tvg-name&#x3D;&quot;(.*?)&quot;&#x27;, &#x27;i&#x27;)</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L69">lib/parser.ts:69</a></li>
+								<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L83">lib/parser.ts:83</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -713,7 +887,7 @@
 						<div class="tsd-signature tsd-kind-icon">tvgURL<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol"> = new RegExp(&#x27;tvg-url&#x3D;&quot;(.*?)&quot;&#x27;, &#x27;i&#x27;)</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/f53ea8b/src/lib/parser.ts#L72">lib/parser.ts:72</a></li>
+								<li>Defined in <a href="https://github.com/pawanpaudel93/ts-m3u-parser/blob/e6fb0a7/src/lib/parser.ts#L86">lib/parser.ts:86</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -793,6 +967,9 @@
 								<a href="m3uparser.html#parsem3u" class="tsd-kind-icon">parse<wbr>M3u</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="m3uparser.html#removebycategory" class="tsd-kind-icon">remove<wbr>ByCategory</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="m3uparser.html#removebyextension" class="tsd-kind-icon">remove<wbr>ByExtension</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -800,6 +977,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="m3uparser.html#retrievebycategory" class="tsd-kind-icon">retrieve<wbr>ByCategory</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="m3uparser.html#retrievebyextension" class="tsd-kind-icon">retrieve<wbr>ByExtension</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="m3uparser.html#savetofile" class="tsd-kind-icon">save<wbr>ToFile</a>
