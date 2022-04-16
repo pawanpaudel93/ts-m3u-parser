@@ -26,7 +26,8 @@
     "sandboxed",
     "transpiled",
     "typedoc",
-    "untracked"
+    "untracked",
+    "pawanpaudel"
   ],
   "flagWords": [],
   "ignorePaths": [

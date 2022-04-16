@@ -57,6 +57,20 @@ export interface Parser {
 
 axiosRetry(axios, { retries: 3 });
 
+/**A parser for m3u files.
+ *
+ * It parses the contents of m3u file to a list of streams information which can be saved as a JSON/M3U file.
+ * ```
+ *  import { M3uParser } from "@pawanpaudel93/m3u-parser"
+ 
+    const userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36"
+    const parser = new M3uParser(userAgent);
+    (async () => {
+        await parser.parseM3u("https://iptv-org.github.io/iptv/countries/np.m3u")
+        console.log(parser.getStreamsInfo())
+    })();
+ * ```
+ */
 export class M3uParser implements Parser {
     private streamsInfo: StreamInfo[] = [];
     private streamsInfoBackup: StreamInfo[] = [];
@@ -91,7 +105,7 @@ export class M3uParser implements Parser {
         return response;
     }
 
-    protected async parseLines() {
+    protected async parseLines(): Promise<void> {
         const numberOfLines = this.lines.length;
         const promises: Promise<void>[] = [];
         for (let i = 0; i < numberOfLines; i++) {
@@ -107,7 +121,7 @@ export class M3uParser implements Parser {
         this.streamsInfoBackup = Object.assign([], this.streamsInfo);
     }
 
-    protected getValue(line: string, type: string) {
+    protected getValue(line: string, type: string): string | null {
         const match = this.regexes[type].exec(line);
         return match ? match[1] : null;
     }
@@ -187,7 +201,7 @@ export class M3uParser implements Parser {
         resolve();
     }
 
-    protected getM3U() {
+    protected getM3U(): string {
         const content = ['#EXTM3U'];
         for (const stream of this.streamsInfo) {
             let line = '#EXTINF:-1';
@@ -223,7 +237,7 @@ export class M3uParser implements Parser {
         return content.join('\n');
     }
 
-    protected getShuffledArr = (arr) => {
+    protected getShuffledArr = (arr: StreamInfo[]): StreamInfo[] => {
         const newArr = arr.slice();
         for (let i = newArr.length - 1; i > 0; i--) {
             const rand = Math.floor(Math.random() * (i + 1));
@@ -232,7 +246,14 @@ export class M3uParser implements Parser {
         return newArr;
     };
 
-    public async parseM3u(path: string, checkLive = true) {
+    /**Parses the content of local file/URL.
+     *
+     * It downloads the file from the given url or use the local file path to get the content and parses line by line to a structured format of streams information.
+     * @param {string} path - Path/URL to the M3U file
+     * @param {boolean} [checkLive=false] - Check if the stream is live
+     * @returns {Promise<void>} - Promise that resolves when the file is parsed
+     */
+    public async parseM3u(path: string, checkLive = true): Promise<void> {
         this.checkLive = checkLive;
         this.lines.length = 0;
         if (isURL(path)) {
@@ -261,26 +282,46 @@ export class M3uParser implements Parser {
             throw new Error('No content found to parse');
         }
     }
-
-    public getJSON(indent = 4) {
+    /**Get the streams information as json
+     * @param {number} [indent=4] - Indentation level
+     * @returns {string} - JSON string of the parsed M3U file
+     */
+    public getJSON(indent = 4): string {
         return JSON.stringify(this.streamsInfo, null, indent);
     }
 
-    public getStreamsInfo() {
+    /**Get the parsed streams information list.
+     * @returns {StreamInfo[]} - Array of StreamInfo objects
+     */
+    public getStreamsInfo(): StreamInfo[] {
         return this.streamsInfo;
     }
 
-    public resetOperations() {
+    /**Reset the stream information list to initial state before various operations.
+     * @returns {void}
+     */
+    public resetOperations(): void {
         this.streamsInfo = Object.assign([], this.streamsInfoBackup);
     }
 
+    /**Filter streams information.
+     *
+     * It retrieves/removes stream information from streams information list using filters on key.
+     * If key is not found, it will not raise error and filtering is done silently.
+     * @param {string} key - Key can be single or nested. eg. key='name', key='language-name'
+     * @param {string[]| boolean[]} filters - List of filters to perform the retrieve or remove operation.
+     * @param {boolean} [retrieve=false] - True to retrieve and False for removing based on key.
+     * @param {boolean} [nestedKey=false] - True/False for if the key is nested or not.
+     * @param {string} [keySplitter='-'] - A splitter to split the nested keys. Default: "-"
+     * @returns {void}
+     */
     public filterBy(
         key: string,
         filters: string[] | boolean[],
         retrieve = true,
         nestedKey = false,
         keySplitter = '-'
-    ) {
+    ): void {
         if (filters.length === 0) return;
         let [key0, key1] = ['', ''];
         if (nestedKey) {
@@ -305,20 +346,59 @@ export class M3uParser implements Parser {
         });
     }
 
+    /**Retrieve only streams information with certain extensions.
+     *
+     * It retrieves the stream information based on extensions provided.
+     * @param {string[]} extensions - List of extensions like mp4, m3u8 etc.
+     * @returns {void}
+     */
+    public retrieveByExtension(extensions: string[]) {
+        this.filterBy('url', extensions, true);
+    }
+
+    /**Removes streams information with certain extensions.
+     *
+     * It removes stream information based on extensions provided.
+     * @param {string[]} extensions - List of extensions like mp4, m3u8 etc.
+     * @returns {void}
+     */
     public removeByExtension(extensions: string[]) {
         this.filterBy('url', extensions, false);
     }
 
-    public retrieveByCategory(filters: string[] | boolean[]) {
-        this.filterBy('category', filters, true);
+    /**Retrieve only streams information with certain categories.
+     *
+     * It retrieves stream information based on categories provided.
+     * @param {string[]|boolean[]} categories - List of categories to perform the retrieve or remove operation.
+     */
+    public retrieveByCategory(categories: string[] | boolean[]) {
+        this.filterBy('category', categories, true);
     }
 
+    /**Removes streams information with certain categories.
+     *
+     * It removes stream information based on categories provided..
+     * @param {string[]|boolean[]} categories - List of categories to perform the retrieve or remove operation.
+     */
+    public removeByCategory(categories: string[] | boolean[]) {
+        this.filterBy('category', categories, true);
+    }
+
+    /**Sort streams information.
+     *
+     * It sorts streams information list sorting by key in asc/desc order.
+     * @param {string} key - Key to sort by. It can be single or nested key.
+     * @param {boolean} [asc=true] - True for ascending and False for descending.
+     * @param {boolean} [nestedKey=false] - True/False for if the key is nested or not.
+     * @param {string} [keySplitter='-'] - A splitter to split the nested keys. Default: "-"
+     * @returns {void}
+     */
     public sortBy(
         key: string,
         asc = true,
         nestedKey = false,
         keySplitter = '-'
-    ) {
+    ): void {
         let [key0, key1] = ['', ''];
         if (nestedKey) {
             [key0, key1] = key.split(keySplitter);
@@ -345,7 +425,13 @@ export class M3uParser implements Parser {
         });
     }
 
-    public getRandomStream(shuffle = true) {
+    /**Return a random stream information
+     *
+     * It returns a random stream information with shuffle if required.
+     * @param {boolean} [shuffle=false] - True to shuffle and False for not.
+     * @returns {StreamInfo} - Stream information object.
+     */
+    public getRandomStream(shuffle = true): StreamInfo {
         if (shuffle) {
             this.streamsInfo = this.getShuffledArr(this.streamsInfo);
         }
@@ -354,7 +440,14 @@ export class M3uParser implements Parser {
         ];
     }
 
-    public saveToFile(filePath: string, format = 'json') {
+    /**Save to file (JSON or M3U)
+     *
+     * It saves streams information as a JSON, or M3U file with a given filename and format parameters.
+     * @param {string} filePath - Path to save the file.
+     * @param {string} [format='json'] - Format of the file to save. Can be 'json' or 'm3u'.
+     * @returns {void}
+     */
+    public saveToFile(filePath: string, format = 'json'): void {
         format =
             filePath.split('.').length > 1 ? filePath.split('.').pop() : format;
         if (!filePath.includes(`.${format}`)) {
