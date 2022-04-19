@@ -1,6 +1,6 @@
 {
   "name": "@pawanpaudel93/m3u-parser",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "A parser for m3u files. It parses the contents of the m3u file to a list of streams information which can be saved as a JSON/M3U file.",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
