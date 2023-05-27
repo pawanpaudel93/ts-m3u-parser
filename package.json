@@ -7,7 +7,10 @@
   "module": "build/module/index.js",
   "repository": "https://github.com/pawanpaudel93/ts-m3u-parser",
   "license": "MIT",
-  "keywords": [],
+  "keywords": [
+    "m3u parser",
+    "parser"
+  ],
   "scripts": {
     "build": "run-p build:*",
     "build:main": "tsc -p tsconfig.json",
@@ -42,11 +45,11 @@
     "node": ">=10"
   },
   "dependencies": {
-    "axios": "^0.26.1",
-    "axios-retry": "^3.2.4",
-    "i18n-iso-countries": "^7.4.0",
-    "iso-639-1": "^2.1.13",
-    "validator": "^13.7.0"
+    "axios": "^1.4.0",
+    "axios-retry": "^3.5.0",
+    "i18n-iso-countries": "^7.6.0",
+    "iso-639-1": "^2.1.15",
+    "validator": "^13.9.0"
   },
   "devDependencies": {
     "@ava/typescript": "^1.1.1",
