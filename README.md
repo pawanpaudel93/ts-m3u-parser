@@ -2,7 +2,7 @@
 
 ## Description
 
-`@pawanpaudel93/m3u-parser` is an npm package that provides a parser for M3U files. It allows you to parse the contents of an M3U file and convert it into a list of stream information. The parsed information can be saved as a JSON or M3U file.
+`@pawanpaudel93/m3u-parser` is a package that provides a parser for M3U files. It allows you to parse the contents of an M3U file and convert it into a list of stream information. The parsed information can be saved as a JSON or M3U file.
 
 ## Installation
 
