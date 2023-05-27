@@ -119,7 +119,7 @@ The `StreamInfo` interface represents a single stream with the following propert
   - `name`: The name of the country.
 - `language`: An object containing the language information with the following properties:
   - `code`: The ISO 639-1 language code.
-    -`name`: The name of the language.
+  - `name`: The name of the language.
 
 ## Author
 

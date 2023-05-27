@@ -39,7 +39,7 @@ function areArraysSame(arr1, arr2) {
 test.beforeEach(async (t) => {
     const userAgent =
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36';
-    t.context = new M3uParser(userAgent);
+    t.context = new M3uParser({ userAgent });
     await (t.context as Parser).parseM3u('np.m3u', false);
 });
 
