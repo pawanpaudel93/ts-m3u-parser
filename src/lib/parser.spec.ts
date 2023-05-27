@@ -4,14 +4,43 @@ import test from 'ava';
 
 import { M3uParser, Parser, StreamInfo } from './parser';
 
+function sortInOrder(asc = true) {
+    return (a: string | null, b: string | null) => {
+        if (a === null && b === null) {
+            return 0;
+        } else if (a === null) {
+            return asc ? -1 : 1;
+        } else if (b === null) {
+            return asc ? 1 : -1;
+        }
+
+        if (asc) {
+            return a.localeCompare(b);
+        } else {
+            return b.localeCompare(a);
+        }
+    };
+}
+
+function areArraysSame(arr1, arr2) {
+    if (arr1.length !== arr2.length) {
+        return false; // Arrays have different lengths
+    }
+
+    for (let i = 0; i < arr1.length; i++) {
+        if (arr1[i] !== arr2[i]) {
+            return false; // Found mismatched elements
+        }
+    }
+
+    return true; // Arrays are the same
+}
+
 test.beforeEach(async (t) => {
     const userAgent =
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36';
     t.context = new M3uParser(userAgent);
-    await (t.context as Parser).parseM3u(
-        'https://iptv-org.github.io/iptv/countries/np.m3u',
-        false
-    );
+    await (t.context as Parser).parseM3u('np.m3u', false);
 });
 
 test('Parse a local m3u file', async (t) => {
@@ -76,98 +105,93 @@ test('Save to JSON File', (t) => {
 
 // Filtering
 test('Filter failed on invalid keySplitter passed', async (t) => {
-    await t.throwsAsync(
-        async () =>
-            await (t.context as Parser).filterBy(
-                'tvg-name',
-                ['news'],
-                true,
-                true,
-                '+'
-            )
+    await t.throwsAsync(async () =>
+        (t.context as Parser).filterBy('tvg-name', ['news'], true, true, '+')
     );
-    await t.throwsAsync(
-        async () =>
-            await (t.context as Parser).filterBy(
-                'tvg-name',
-                ['news'],
-                false,
-                true,
-                '+'
-            )
+    await t.throwsAsync(async () =>
+        (t.context as Parser).filterBy('tvg-name', ['news'], false, true, '+')
     );
 });
 
 test('Filter failed on no filters passed', async (t) => {
     const beforeStreams = (t.context as Parser).getStreamsInfo();
-    await (t.context as Parser).filterBy('name', []);
+    (t.context as Parser).filterBy('name', []);
     const afterStreams = (t.context as Parser).getStreamsInfo();
     t.deepEqual(beforeStreams, afterStreams);
 });
 
 test('Filter by nestedKey: tvg-id', async (t) => {
-    await (t.context as Parser).filterBy('tvg-id', ['bbc'], true, true);
+    (t.context as Parser).filterBy('tvg-id', ['BBCWorldNews.uk'], true, true);
     t.assert((t.context as Parser).getStreamsInfo().length > 0);
 });
 
 // Sorting
 test('Sort failed on invalid keySplitter passed', async (t) => {
-    await t.throwsAsync(
-        async () =>
-            await (t.context as Parser).sortBy('tvg-name', true, true, '+')
+    await t.throwsAsync(async () =>
+        (t.context as Parser).sortBy('tvg-name', true, true, '+')
     );
-    await t.throwsAsync(
-        async () =>
-            await (t.context as Parser).sortBy('tvg-name', false, true, '+')
+    await t.throwsAsync(async () =>
+        (t.context as Parser).sortBy('tvg-name', false, true, '+')
     );
 });
 
 test('Sort single key: name in ascending order', (t) => {
-    (t.context as Parser).sortBy('name');
-    const streams: StreamInfo[] = (t.context as Parser).getStreamsInfo();
-    t.assert(streams.length > 0);
+    const parser = t.context as Parser;
+    const beforeSortedNames = parser
+        .getStreamsInfo()
+        .map((stream) => stream.name)
+        .sort(sortInOrder(true));
+    parser.sortBy('name');
+    const afterSortedNames = parser
+        .getStreamsInfo()
+        .map((stream) => stream.name);
     // check if sorted
-    let prev = streams[0].name;
-    for (const stream of streams) {
-        t.assert(prev <= stream.name);
-        prev = stream.name;
-    }
+    t.assert(areArraysSame(beforeSortedNames, afterSortedNames));
 });
 
 test('Sort single key: name in descending order', (t) => {
-    (t.context as Parser).sortBy('name', false);
-    const streams: StreamInfo[] = (t.context as Parser).getStreamsInfo();
+    const parser = t.context as Parser;
+    const streams: StreamInfo[] = parser.getStreamsInfo();
+    const beforeSortedNames = streams
+        .map((stream) => stream.name)
+        .sort(sortInOrder(false));
     t.assert(streams.length > 0);
+    parser.sortBy('name', false);
+    const afterSortedNames = parser
+        .getStreamsInfo()
+        .map((stream) => stream.name);
     // check if sorted
-    let prev = streams[0].name;
-    for (const stream of streams) {
-        t.assert(prev >= stream.name);
-        prev = stream.name;
-    }
+    t.assert(areArraysSame(beforeSortedNames, afterSortedNames));
 });
 
-test('Sort nestedKey: tvg-name in ascending order', (t) => {
-    (t.context as Parser).sortBy('tvg-id', true, true);
-    const streams: StreamInfo[] = (t.context as Parser).getStreamsInfo();
+test('Sort nestedKey: tvg-id in ascending order', (t) => {
+    const parser = t.context as Parser;
+    const streams: StreamInfo[] = parser.getStreamsInfo();
     t.assert(streams.length > 0);
+    const beforeSortedIds = streams
+        .map((stream) => stream.tvg.id)
+        .sort(sortInOrder());
+    parser.sortBy('tvg-id', true, true);
+    const afterSortedIds = parser
+        .getStreamsInfo()
+        .map((stream) => stream.tvg.id);
     // check if sorted
-    let prev = streams[0].tvg.name;
-    for (const stream of streams) {
-        t.assert(prev <= stream.tvg.name);
-        prev = stream.tvg.name;
-    }
+    t.assert(areArraysSame(beforeSortedIds, afterSortedIds));
 });
 
-test('Sort nestedKey: tvg-name in descending order', (t) => {
-    (t.context as Parser).sortBy('tvg-id', false, true);
-    const streams: StreamInfo[] = (t.context as Parser).getStreamsInfo();
+test('Sort nestedKey: tvg-id in descending order', (t) => {
+    const parser = t.context as Parser;
+    const streams: StreamInfo[] = parser.getStreamsInfo();
     t.assert(streams.length > 0);
+    const beforeSortedIds = streams
+        .map((stream) => stream.tvg.id)
+        .sort(sortInOrder(false));
+    parser.sortBy('tvg-id', false, true);
+    const afterSortedIds = parser
+        .getStreamsInfo()
+        .map((stream) => stream.tvg.id);
     // check if sorted
-    let prev = streams[0].tvg.name;
-    for (const stream of streams) {
-        t.assert(prev >= stream.tvg.name);
-        prev = stream.tvg.name;
-    }
+    t.assert(areArraysSame(beforeSortedIds, afterSortedIds));
 });
 
 test('Get a random stream', async (t) => {

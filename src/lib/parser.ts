@@ -95,7 +95,7 @@ export class M3uParser implements Parser {
         this.timeout = timeout * 1000;
     }
 
-    protected async axiosGet(url) {
+    protected async axiosGet(url: string) {
         const response = await axios.get(url, {
             headers: {
                 'User-Agent': this.userAgent,
@@ -333,7 +333,7 @@ export class M3uParser implements Parser {
             }
         }
         this.streamsInfo = this.streamsInfo.filter((stream) => {
-            let check;
+            let check: unknown;
             if (nestedKey) {
                 check = new RegExp(filters.join('|'), 'i').test(
                     stream[key0][key1]
@@ -409,18 +409,27 @@ export class M3uParser implements Parser {
             }
         }
         this.streamsInfo.sort((a, b) => {
+            let aValue: StringOrNull, bValue: StringOrNull;
             if (nestedKey) {
-                if (asc) {
-                    return a[key0][key1] > b[key0][key1] ? 1 : -1;
-                } else {
-                    return a[key0][key1] < b[key0][key1] ? 1 : -1;
-                }
+                aValue = a[key0][key1];
+                bValue = b[key0][key1];
             } else {
-                if (asc) {
-                    return a[key] > b[key] ? 1 : -1;
-                } else {
-                    return a[key] < b[key] ? 1 : -1;
-                }
+                aValue = a[key];
+                bValue = b[key];
+            }
+
+            if (aValue === null && bValue === null) {
+                return 0;
+            } else if (aValue === null) {
+                return asc ? -1 : 1;
+            } else if (bValue === null) {
+                return asc ? 1 : -1;
+            }
+
+            if (asc) {
+                return aValue.localeCompare(bValue);
+            } else {
+                return bValue.localeCompare(aValue);
             }
         });
     }
