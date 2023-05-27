@@ -85,7 +85,11 @@ export class M3uParser implements Parser {
         tvgCountry: new RegExp('tvg-country="(.*?)"', 'i'),
         tvgLanguage: new RegExp('tvg-language="(.*?)"', 'i'),
         groupTitle: new RegExp('group-title="(.*?)"', 'i'),
-        title: new RegExp('(?!.*=",?.*")[,](.*?)$', 'i'),
+        title: new RegExp('([^,]+)$', 'i'),
+        streams: new RegExp('acestream://[a-zA-Z0-9]+'),
+        file: new RegExp(
+            '^[a-zA-Z]:\\((?:.*?\\)*).*.[dw]{3,5}$|^/(?:[^/]*)+/?.[dw]{3,5}$'
+        ),
     };
 
     constructor(options: M3uParserOptions = {}) {
@@ -138,15 +142,18 @@ export class M3uParser implements Parser {
 
         try {
             for (const i of [1, 2]) {
-                if (
-                    this.lines[lineNumber + i] &&
-                    isURL(this.lines[lineNumber + i])
-                ) {
-                    streamLink = this.lines[lineNumber + i];
+                const line = this.lines[lineNumber + i];
+                const isAceStream = this.getValue(line, 'streams');
+
+                if (line && (isAceStream || isURL(line))) {
+                    streamLink = line;
+                    if (isAceStream) {
+                        live = true;
+                    }
                     break;
-                } else {
+                } else if (line && this.getValue(line, 'file')) {
                     live = true;
-                    streamLink = this.lines[lineNumber + i];
+                    streamLink = line;
                     break;
                 }
             }
@@ -216,16 +223,10 @@ export class M3uParser implements Parser {
                 line += ` tvg-logo="${stream.logo}"`;
             }
             if (stream.country && stream.country.code) {
-                if (stream.country.code)
-                    line += ` tvg-country="${stream.country.code}"`;
-                if (stream.country.name)
-                    line += ` tvg-country="${stream.country.name}"`;
+                line += ` tvg-country="${stream.country.code}"`;
             }
             if (stream.language && stream.language.name) {
-                if (stream.language.code)
-                    line += ` tvg-language="${stream.language.code}"`;
-                if (stream.language.name)
-                    line += ` tvg-language="${stream.language.name}"`;
+                line += ` tvg-language="${stream.language.name}"`;
             }
             if (stream.category) {
                 line += ` group-title="${stream.category}"`;

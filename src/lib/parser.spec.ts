@@ -40,7 +40,10 @@ test.beforeEach(async (t) => {
     const userAgent =
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36';
     t.context = new M3uParser({ userAgent });
-    await (t.context as Parser).parseM3u('np.m3u', false);
+    await (t.context as Parser).parseM3u(
+        'https://iptv-org.github.io/iptv/countries/np.m3u',
+        false
+    );
 });
 
 test('Parse a local m3u file', async (t) => {
@@ -80,7 +83,7 @@ test('Remove streams by Extension', async (t) => {
 test('Retrieve streams by category', async (t) => {
     let streams: StreamInfo[] = (t.context as Parser).getStreamsInfo();
     t.assert(streams.length > 0);
-    (t.context as Parser).retrieveByCategory(['sports']);
+    (t.context as Parser).retrieveByCategory(['Music']);
     streams = (t.context as Parser).getStreamsInfo();
     t.assert(streams.length > 0);
 });
@@ -121,7 +124,7 @@ test('Filter failed on no filters passed', async (t) => {
 });
 
 test('Filter by nestedKey: tvg-id', async (t) => {
-    (t.context as Parser).filterBy('tvg-id', ['BBCWorldNews.uk'], true, true);
+    (t.context as Parser).filterBy('tvg-id', ['NickJrIndia.in'], true, true);
     t.assert((t.context as Parser).getStreamsInfo().length > 0);
 });
 
