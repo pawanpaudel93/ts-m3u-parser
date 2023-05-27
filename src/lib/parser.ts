@@ -3,13 +3,11 @@ import * as fs from 'fs';
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import * as countries from 'i18n-iso-countries';
+import ISO6391 from 'iso-639-1';
 import isURL from 'validator/lib/isURL';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const ISO6391 = require('iso-639-1');
-
 type StringOrNull = string | null;
-
+type M3uParserOptions = { userAgent?: string; timeout?: number };
 export interface StreamInfo {
     name: StringOrNull;
     logo: StringOrNull;
@@ -90,9 +88,13 @@ export class M3uParser implements Parser {
         title: new RegExp('(?!.*=",?.*")[,](.*?)$', 'i'),
     };
 
-    constructor(userAgent: string, timeout = 5) {
-        this.userAgent = userAgent;
-        this.timeout = timeout * 1000;
+    constructor(options: M3uParserOptions = {}) {
+        const defaultUserAgent =
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36';
+        const defaultTimeout = 5;
+
+        this.userAgent = options.userAgent || defaultUserAgent;
+        this.timeout = (options.timeout || defaultTimeout) * 1000;
     }
 
     protected async axiosGet(url: string) {
