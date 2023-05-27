@@ -77,7 +77,7 @@ The @pawanpaudel93/m3u-parser package provides the following API:
 
 The M3uParser class provides the following methods:
 
-- `parseM3u(path: string, checkLive?: boolean)`: Promise<void>: Parses the content of a local file or URL. It downloads the file from the given URL or uses the local file path to get the content and parses it line by line to a structured format of stream information. The optional `checkLive` parameter can be used to determine whether to check if the stream is live or not.
+- `parseM3u(path: string, checkLive?: boolean): Promise<void>`: Parses the content of a local file or URL. It downloads the file from the given URL or uses the local file path to get the content and parses it line by line to a structured format of stream information. The optional `checkLive` parameter can be used to determine whether to check if the stream is live or not.
 
 - `getJSON(indent?: number): string`: Returns the parsed stream information as a JSON string. The optional `indent` parameter specifies the number of spaces for indentation in the JSON string.
 
@@ -120,6 +120,12 @@ The `StreamInfo` interface represents a single stream with the following propert
 - `language`: An object containing the language information with the following properties:
   - `code`: The ISO 639-1 language code.
   - `name`: The name of the language.
+
+## Other Implementations
+
+- `Golang`: [go-m3u-parser](https://github.com/pawanpaudel93/go-m3u-parser)
+- `Python`: [m3u-parser](https://github.com/pawanpaudel93/m3u-parser)
+- `Rust`: [rs-m3u-parser](https://github.com/pawanpaudel93/rs-m3u-parser)
 
 ## Author
 
