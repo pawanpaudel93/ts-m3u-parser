@@ -28,6 +28,8 @@ pnpm add @pawanpaudel93/m3u-parser
 
 Initialize the M3uParser class and parse the M3U file:
 
+For Node,
+
 ```ts
 import { M3uParser } from '@pawanpaudel93/m3u-parser';
 
@@ -37,6 +39,21 @@ const parser = new M3uParser({userAgent, timeout});
 
 (async () => {
     await parser.parseM3u("https://iptv-org.github.io/iptv/countries/np.m3u");
+    console.log(parser.getStreamsInfo());
+})();
+```
+
+For Browser,
+
+```ts
+import { M3uParser } from '@pawanpaudel93/m3u-parser';
+
+const userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36";
+const timeout = 5
+const parser = new M3uParser({userAgent, timeout});
+
+(async () => {
+    await parser.parseM3u(file);
     console.log(parser.getStreamsInfo());
 })();
 ```
