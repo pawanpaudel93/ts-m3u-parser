@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/pawanpaudel93/ts-m3u-parser/compare/v1.0.5...v1.1.0) (2023-06-13)
+
+
+### Features
+
+* Rearrange files for node and browser ([ae70a40](https://github.com/pawanpaudel93/ts-m3u-parser/commit/ae70a40c775ed27dbd8a27d7212136c3e990846e))
+
 ### [1.0.5](https://github.com/pawanpaudel93/ts-m3u-parser/compare/v1.0.4...v1.0.5) (2023-05-27)
 
 
