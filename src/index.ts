@@ -246,41 +246,34 @@ export class M3uParser implements Parser {
      *
      * It downloads the file from the given url or use the local file path to get the content or read the file in the browser and parses line by line to a structured format of streams information.
      * @param {string | File} fileOrPath - Path/URL to the M3U file or file itself in browser.
-     * @param {boolean} [checkLive=false] - Check if the stream is live
+     * @param {boolean} [checkLive=true] - Check if the stream is live
      * @returns {Promise<void>} - Promise that resolves when the file is parsed
      */
     public async parseM3u(fileOrPath: string | File, checkLive = true): Promise<void> {
         this.checkLive = checkLive;
         this.lines.length = 0;
-        if (this.isNodeJS && typeof fileOrPath === 'string') {
-            if (isURL(fileOrPath)) {
-                try {
+        try {
+            if (typeof fileOrPath === 'string') {
+                if (this.isNodeJS) {
+                    if (isURL(fileOrPath)) {
+                        const response = await this.axiosGet(fileOrPath);
+                        this.content = response.data;
+                    } else {
+                        const fs = await import('fs');
+                        this.content = fs.readFileSync(fileOrPath, 'utf8');
+                    }
+                } else {
                     const response = await this.axiosGet(fileOrPath);
                     this.content = response.data;
-                } catch (error) {
-                    throw new Error(error);
                 }
             } else {
-                try {
-                    const fs = await import('fs');
-                    this.content = fs.readFileSync(fileOrPath, 'utf8');
-                } catch (err) {
-                    throw new Error(err);
-                }
+                this.content = await new Response(fileOrPath).text();
             }
-        } else {
-            this.content = await new Response(fileOrPath).text();
-            for (const line of this.content.split('\n')) {
-                if (line.trim()) {
-                    this.lines.push(line.trim());
-                }
-            }
+        } catch (error) {
+            throw new Error(error);
         }
-        for (const line of this.content.split('\n')) {
-            if (line.trim()) {
-                this.lines.push(line.trim());
-            }
-        }
+
+        this.lines = this.content.split('\n').filter((line) => line.trim());
 
         if (this.lines.length > 0) {
             await this.parseLines();
@@ -358,7 +351,7 @@ export class M3uParser implements Parser {
      * If key is not found, it will not raise error and filtering is done silently.
      * @param {string} key - Key can be single or nested. eg. key='name', key='language-name'
      * @param {string[]| boolean[]} filters - List of filters to perform the retrieve or remove operation.
-     * @param {boolean} [retrieve=false] - True to retrieve and False for removing based on key.
+     * @param {boolean} [retrieve=true] - True to retrieve and False for removing based on key.
      * @param {boolean} [nestedKey=false] - True/False for if the key is nested or not.
      * @param {string} [keySplitter='-'] - A splitter to split the nested keys. Default: "-"
      * @returns {void}
@@ -475,7 +468,7 @@ export class M3uParser implements Parser {
     /**Return a random stream information
      *
      * It returns a random stream information with shuffle if required.
-     * @param {boolean} [shuffle=false] - True to shuffle and False for not.
+     * @param {boolean} [shuffle=true] - True to shuffle and False for not.
      * @returns {StreamInfo} - Stream information object.
      */
     public getRandomStream(shuffle = true): StreamInfo {
