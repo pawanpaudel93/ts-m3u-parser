@@ -87,6 +87,7 @@
 					<h2>Usage</h2>
 				</a>
 				<p>Initialize the M3uParser class and parse the M3U file:</p>
+				<p>For Node,</p>
 				<pre><code class="language-ts"><span class="hljs-keyword">import</span> { M3uParser } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@pawanpaudel93/m3u-parser&#x27;</span>;
 
 <span class="hljs-keyword">const</span> userAgent = <span class="hljs-string">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36&quot;</span>;
@@ -95,6 +96,18 @@
 
 (<span class="hljs-keyword">async</span> () =&gt; {
     <span class="hljs-keyword">await</span> parser.parseM3u(<span class="hljs-string">&quot;https://iptv-org.github.io/iptv/countries/np.m3u&quot;</span>);
+    <span class="hljs-built_in">console</span>.log(parser.getStreamsInfo());
+})();
+</code></pre>
+				<p>For Browser,</p>
+				<pre><code class="language-ts"><span class="hljs-keyword">import</span> { M3uParser } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@pawanpaudel93/m3u-parser&#x27;</span>;
+
+<span class="hljs-keyword">const</span> userAgent = <span class="hljs-string">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36&quot;</span>;
+<span class="hljs-keyword">const</span> timeout = <span class="hljs-number">5</span>
+<span class="hljs-keyword">const</span> parser = <span class="hljs-keyword">new</span> M3uParser({userAgent, timeout});
+
+(<span class="hljs-keyword">async</span> () =&gt; {
+    <span class="hljs-keyword">await</span> parser.parseM3u(file);
     <span class="hljs-built_in">console</span>.log(parser.getStreamsInfo());
 })();
 </code></pre>
@@ -132,7 +145,7 @@ parser.resetOperations();
 				</a>
 				<p>The M3uParser class provides the following methods:</p>
 				<ul>
-					<li><p><code>parseM3u(path: string, checkLive?: boolean)</code>: Promise<void>: Parses the content of a local file or URL. It downloads the file from the given URL or uses the local file path to get the content and parses it line by line to a structured format of stream information. The optional <code>checkLive</code> parameter can be used to determine whether to check if the stream is live or not.</p>
+					<li><p><code>parseM3u(fileOrPath: string | File, checkLive?: boolean): Promise&lt;void&gt;</code>: Parses the content of a local file or URL. It downloads the file from the given URL or uses the local file path to get the content or read the file in the browser and parses it line by line to a structured format of stream information. The optional <code>checkLive</code> parameter can be used to determine whether to check if the stream is live or not.</p>
 					</li>
 					<li><p><code>getJSON(indent?: number): string</code>: Returns the parsed stream information as a JSON string. The optional <code>indent</code> parameter specifies the number of spaces for indentation in the JSON string.</p>
 					</li>
@@ -154,7 +167,7 @@ parser.resetOperations();
 					</li>
 					<li><p><code>getRandomStream(shuffle?: boolean): StreamInfo</code>: Returns a random stream from the stream information list. If <code>shuffle</code> is <code>true</code>, the stream information list is shuffled before selecting a random stream.</p>
 					</li>
-					<li><p><code>saveToFile(file: string, format?: string): void</code>: Saves the parsed stream information to a file. The file parameter specifies the file path, and the <code>format</code> parameter determines the format of the file. If <code>format</code> is not provided or not supported, the default format is JSON.</p>
+					<li><p><code>saveToFile(fileNameOrPath: string, format?: string): void</code>: Saves the parsed stream information to a file. The file parameter specifies the file path or file name, and the <code>format</code> parameter determines the format of the file. If <code>format</code> is not provided or not supported, the default format is JSON.</p>
 					</li>
 				</ul>
 				<a href="#streaminfo" id="streaminfo" style="color: inherit; text-decoration: none;">
@@ -183,6 +196,14 @@ parser.resetOperations();
 							<li><code>name</code>: The name of the language.</li>
 						</ul>
 					</li>
+				</ul>
+				<a href="#other-implementations" id="other-implementations" style="color: inherit; text-decoration: none;">
+					<h2>Other Implementations</h2>
+				</a>
+				<ul>
+					<li><code>Golang</code>: <a href="https://github.com/pawanpaudel93/go-m3u-parser">go-m3u-parser</a></li>
+					<li><code>Python</code>: <a href="https://github.com/pawanpaudel93/m3u-parser">m3u-parser</a></li>
+					<li><code>Rust</code>: <a href="https://github.com/pawanpaudel93/rs-m3u-parser">rs-m3u-parser</a></li>
 				</ul>
 				<a href="#author" id="author" style="color: inherit; text-decoration: none;">
 					<h2>Author</h2>
@@ -241,13 +262,11 @@ parser.resetOperations();
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-			</ul>
-			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
 			</ul>
 		</div>
 	</div>
