@@ -77,7 +77,7 @@ The @pawanpaudel93/m3u-parser package provides the following API:
 
 The M3uParser class provides the following methods:
 
-- `parseM3u(path: string, checkLive?: boolean): Promise<void>`: Parses the content of a local file or URL. It downloads the file from the given URL or uses the local file path to get the content and parses it line by line to a structured format of stream information. The optional `checkLive` parameter can be used to determine whether to check if the stream is live or not.
+- `parseM3u(fileOrPath: string | File, checkLive?: boolean): Promise<void>`: Parses the content of a local file or URL. It downloads the file from the given URL or uses the local file path to get the content or read the file in the browser and parses it line by line to a structured format of stream information. The optional `checkLive` parameter can be used to determine whether to check if the stream is live or not.
 
 - `getJSON(indent?: number): string`: Returns the parsed stream information as a JSON string. The optional `indent` parameter specifies the number of spaces for indentation in the JSON string.
 
@@ -99,7 +99,7 @@ The M3uParser class provides the following methods:
 
 - `getRandomStream(shuffle?: boolean): StreamInfo`: Returns a random stream from the stream information list. If `shuffle` is `true`, the stream information list is shuffled before selecting a random stream.
 
-- `saveToFile(file: string, format?: string): void`: Saves the parsed stream information to a file. The file parameter specifies the file path, and the `format` parameter determines the format of the file. If `format` is not provided or not supported, the default format is JSON.
+- `saveToFile(fileNameOrPath: string, format?: string): void`: Saves the parsed stream information to a file. The file parameter specifies the file path or file name, and the `format` parameter determines the format of the file. If `format` is not provided or not supported, the default format is JSON.
 
 ### StreamInfo
 

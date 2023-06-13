@@ -244,8 +244,8 @@ export class M3uParser implements Parser {
 
     /**Parses the content of local file/URL.
      *
-     * It downloads the file from the given url or use the local file path to get the content and parses line by line to a structured format of streams information.
-     * @param {string | File} fileOrPath - Path/URL to the M3U file
+     * It downloads the file from the given url or use the local file path to get the content or read the file in the browser and parses line by line to a structured format of streams information.
+     * @param {string | File} fileOrPath - Path/URL to the M3U file or file itself in browser.
      * @param {boolean} [checkLive=false] - Check if the stream is live
      * @returns {Promise<void>} - Promise that resolves when the file is parsed
      */
@@ -292,7 +292,7 @@ export class M3uParser implements Parser {
     /**Save to file (JSON or M3U)
      *
      * It saves streams information as a JSON, or M3U file with a given filename and format parameters.
-     * @param {string} fileNameOrPath - Path to save the file.
+     * @param {string} fileNameOrPath - Path or file name to save the file.
      * @param {string} [format='json'] - Format of the file to save. Can be 'json' or 'm3u'.
      * @returns {void}
      */

@@ -22,7 +22,7 @@ function sortInOrder(asc = true) {
     };
 }
 
-function areArraysSame(arr1, arr2) {
+function areArraysSame(arr1: unknown[], arr2: unknown[]) {
     if (arr1.length !== arr2.length) {
         return false; // Arrays have different lengths
     }
