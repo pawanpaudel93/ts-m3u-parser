@@ -1,57 +1,10 @@
-import * as fs from 'fs';
-
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import * as countries from 'i18n-iso-countries';
 import ISO6391 from 'iso-639-1';
 import isURL from 'validator/lib/isURL';
 
-type StringOrNull = string | null;
-type M3uParserOptions = { userAgent?: string; timeout?: number };
-export interface StreamInfo {
-    name: StringOrNull;
-    logo: StringOrNull;
-    url: StringOrNull;
-    category: StringOrNull;
-    live?: boolean;
-    tvg: {
-        id: StringOrNull;
-        name: StringOrNull;
-        url: StringOrNull;
-    };
-    country: {
-        code: StringOrNull;
-        name: StringOrNull;
-    };
-    language: {
-        code: StringOrNull;
-        name: StringOrNull;
-    };
-}
-
-export interface Parser {
-    filterBy: (
-        key: string,
-        filters: string[] | boolean[],
-        retrieve?: boolean,
-        nestedKey?: boolean,
-        keySplitter?: string
-    ) => void;
-    sortBy: (
-        key: string,
-        asc?: boolean,
-        nestedKey?: boolean,
-        keySplitter?: string
-    ) => void;
-    parseM3u: (path: string, checkLive?: boolean) => Promise<void>;
-    removeByExtension: (extensions: string[]) => void;
-    resetOperations: () => void;
-    retrieveByCategory: (category: string[] | boolean[]) => void;
-    getRandomStream: (shuffle?: boolean) => StreamInfo;
-    saveToFile: (file: string, format?: string) => void;
-    getStreamsInfo: () => StreamInfo[];
-    getJSON: () => string;
-}
+import { M3uParserOptions, Parser, StreamInfo, StringOrNull } from './types';
 
 axiosRetry(axios, { retries: 3 });
 
@@ -70,14 +23,14 @@ axiosRetry(axios, { retries: 3 });
  * ```
  */
 export class M3uParser implements Parser {
-    private streamsInfo: StreamInfo[] = [];
-    private streamsInfoBackup: StreamInfo[] = [];
-    private lines: string[] = [];
-    private checkLive = true;
-    private content = '';
-    private timeout: number;
-    private userAgent: string;
-    private regexes = {
+    protected streamsInfo: StreamInfo[] = [];
+    protected streamsInfoBackup: StreamInfo[] = [];
+    protected lines: string[] = [];
+    protected checkLive = true;
+    protected content = '';
+    protected timeout: number;
+    protected userAgent: string;
+    protected regexes = {
         tvgName: new RegExp('tvg-name="(.*?)"', 'i'),
         tvgID: new RegExp('tvg-id="(.*?)"', 'i'),
         tvgLogo: new RegExp('tvg-logo="(.*?)"', 'i'),
@@ -249,42 +202,6 @@ export class M3uParser implements Parser {
         return newArr;
     };
 
-    /**Parses the content of local file/URL.
-     *
-     * It downloads the file from the given url or use the local file path to get the content and parses line by line to a structured format of streams information.
-     * @param {string} path - Path/URL to the M3U file
-     * @param {boolean} [checkLive=false] - Check if the stream is live
-     * @returns {Promise<void>} - Promise that resolves when the file is parsed
-     */
-    public async parseM3u(path: string, checkLive = true): Promise<void> {
-        this.checkLive = checkLive;
-        this.lines.length = 0;
-        if (isURL(path)) {
-            try {
-                const response = await this.axiosGet(path);
-                this.content = response.data;
-            } catch (error) {
-                throw new Error(error);
-            }
-        } else {
-            try {
-                this.content = fs.readFileSync(path, 'utf8');
-            } catch (err) {
-                throw new Error(err);
-            }
-        }
-        for (const line of this.content.split('\n')) {
-            if (line.trim()) {
-                this.lines.push(line.trim());
-            }
-        }
-
-        if (this.lines.length > 0) {
-            await this.parseLines();
-        } else {
-            throw new Error('No content found to parse');
-        }
-    }
     /**Get the streams information as json
      * @param {number} [indent=4] - Indentation level
      * @returns {string} - JSON string of the parsed M3U file
@@ -355,7 +272,7 @@ export class M3uParser implements Parser {
      * @param {string[]} extensions - List of extensions like mp4, m3u8 etc.
      * @returns {void}
      */
-    public retrieveByExtension(extensions: string[]) {
+    public retrieveByExtension(extensions: string[]): void {
         this.filterBy('url', extensions, true);
     }
 
@@ -365,7 +282,7 @@ export class M3uParser implements Parser {
      * @param {string[]} extensions - List of extensions like mp4, m3u8 etc.
      * @returns {void}
      */
-    public removeByExtension(extensions: string[]) {
+    public removeByExtension(extensions: string[]): void {
         this.filterBy('url', extensions, false);
     }
 
@@ -450,25 +367,5 @@ export class M3uParser implements Parser {
         return this.streamsInfo[
             Math.floor(Math.random() * this.streamsInfo.length)
         ];
-    }
-
-    /**Save to file (JSON or M3U)
-     *
-     * It saves streams information as a JSON, or M3U file with a given filename and format parameters.
-     * @param {string} filePath - Path to save the file.
-     * @param {string} [format='json'] - Format of the file to save. Can be 'json' or 'm3u'.
-     * @returns {void}
-     */
-    public saveToFile(filePath: string, format = 'json'): void {
-        format =
-            filePath.split('.').length > 1 ? filePath.split('.').pop() : format;
-        if (!filePath.includes(`.${format}`)) {
-            filePath = `${filePath}.${format}`;
-        }
-        if (format === 'json') {
-            fs.writeFileSync(filePath, this.getJSON());
-        } else if (format === 'm3u') {
-            fs.writeFileSync(filePath, this.getM3U());
-        }
     }
 }
