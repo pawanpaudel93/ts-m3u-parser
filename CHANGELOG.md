@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/pawanpaudel93/ts-m3u-parser/compare/v1.1.0...v1.1.1) (2023-06-13)
+
+
+### Bug Fixes
+
+* update parsem3u to handle url even if it's browser ([cb75228](https://github.com/pawanpaudel93/ts-m3u-parser/commit/cb75228dff0a68811bcc2747ec95e1cf73a78214))
+
 ## [1.1.0](https://github.com/pawanpaudel93/ts-m3u-parser/compare/v1.0.5...v1.1.0) (2023-06-13)
 
 
